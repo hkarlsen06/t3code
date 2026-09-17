@@ -298,7 +298,7 @@ function addMathMarkdownCopy() {
   return (tree: MarkdownTreeNode) => {
     const findSource = (node: MarkdownTreeNode): string | undefined => {
       if (node.type === "element" && node.properties?.encoding === "application/x-tex") {
-        return node.children.find((child) => child.type === "text")?.value;
+        return (node.children ?? []).find((child) => child.type === "text")?.value;
       }
       for (const child of node.children ?? []) {
         const source = findSource(child);
@@ -3395,8 +3395,14 @@ function ChatMarkdown({
   const normalizedText = useMemo(() => {
     const names = new Set((props.skills ?? []).map((skill) => skill.name));
     return normalizeLatexDelimiters(text).replace(
-      /(^|\s)\$([a-zA-Z][a-zA-Z0-9:_-]*)(?=\s|$)/g,
-      (match, prefix: string, name: string) => (names.has(name) ? `${prefix}\uE000${name}` : match),
+      /(^|\s)\$([a-zA-Z0-9][a-zA-Z0-9:_-]*)(?=\s|$)/g,
+      (match, prefix: string, name: string) => {
+        if (!names.has(name)) return match;
+        // Mirror SkillInlineText: money-like amounts are never skill chips,
+        // so leave them alone instead of hiding them from math parsing.
+        if (/^[0-9][0-9_]*(?:[kKmMbBtT]|[eE][0-9]+)?$/.test(name)) return match;
+        return `${prefix}\uE000${name}`;
+      },
     );
   }, [text, props.skills]);
 

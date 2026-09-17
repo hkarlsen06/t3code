@@ -11,7 +11,7 @@ function isEscaped(value: string, index: number): boolean {
 function startingFence(line: string): { marker: "`" | "~"; length: number } | null {
   const match = /^((?: {0,3}(?:> ?|(?:[*+-]|\d+[.)]) +)*)?)(`{3,}|~{3,})(.*)$/.exec(line);
   const run = match?.[2];
-  if (!run || (run[0] === "`" && match[3].includes("`"))) return null;
+  if (!run || (run[0] === "`" && (match?.[3]?.includes("`") ?? false))) return null;
   return { marker: run[0] as "`" | "~", length: run.length };
 }
 

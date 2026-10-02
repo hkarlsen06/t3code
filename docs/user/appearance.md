@@ -28,6 +28,14 @@ messages and Markdown previews. It reads `$…$`, `$$…$$`, `\(…\)`, and `\[�
 Dollar amounts such as `$5 and $10` stay text; write `\$` to keep any other dollar sign literal.
 Copying a formula copies its TeX. The mobile app shows the TeX source.
 
+## Composer context
+
+Git-backed projects show branch and worktree controls below the composer while you create a thread.
+The controls retreat as the composer docks after you send the first message.
+
+Turn on **Composer context** to keep those controls visible after the thread starts. This preference
+applies to the web and desktop clients.
+
 ## Motion
 
 The main sidebar, right panel, and terminal drawer open and close immediately by default. Move the
